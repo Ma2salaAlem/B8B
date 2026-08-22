@@ -11,7 +11,7 @@ import { addDays, areIntervalsOverlapping, differenceInDays, parseISO } from "da
 import { SEED_BOOKINGS, SEED_LISTINGS, SEED_USERS, daysFromNow, hash, iso } from "./seed";
 import type { Booking, DateRange, Listing, ToastMsg, User } from "./types";
 
-const V = "haven.v3";
+const V = "haven.v4";
 const LS = {
   users: `${V}.users`,
   listings: `${V}.listings`,
@@ -155,12 +155,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const loginGoogle = useCallback(() => {
-    const email = "sasha.fern@gmail.com";
+    const email = "liya.mengistu@gmail.com";
     let user = users.find((u) => u.email === email);
     if (!user) {
       user = {
         id: "u-google-sasha",
-        name: "Sasha Fern",
+        name: "Liya Mengistu",
         email,
         passHash: hash(`google:${Date.now()}`),
         provider: "google",
@@ -175,7 +175,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     setSessionId(null);
-    toast("info", "Signed out. The coast will be here when you get back.");
+    toast("info", "Signed out. The highlands will be here when you get back.");
   }, [toast]);
 
   /* ------------------------------ favorites ------------------------------ */
@@ -201,7 +201,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         title: input.title,
         type: input.type,
         town: input.town,
-        region: "Cedar Coast",
+        region: "Ethiopia",
         price: input.price,
         cleaningFee: input.cleaningFee,
         guests: input.guests,

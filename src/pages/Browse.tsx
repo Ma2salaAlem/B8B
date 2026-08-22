@@ -66,21 +66,21 @@ export default function Browse() {
 
   return (
     <div>
-      {/* ---- opening band: the coast itself ---- */}
+      {/* ---- opening band: the highlands themselves ---- */}
       <section className="topo relative overflow-hidden border-b border-line">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-pine-100/60 via-transparent to-marigold-100/50" />
         <div className="relative mx-auto max-w-[1500px] px-4 pb-8 pt-10 sm:px-6 lg:px-10 lg:pb-10 lg:pt-14">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
               <p className="mask-line text-xs font-bold tracking-[0.28em] text-pine-600">
-                <span style={{ "--d": "80ms" } as React.CSSProperties}>49.3° N — CEDAR COAST REGION</span>
+                <span style={{ "--d": "80ms" } as React.CSSProperties}>9.1° N — THE ETHIOPIAN HIGHLANDS</span>
               </p>
               <h1 className="mt-3 font-display text-[40px] font-semibold leading-[1.02] tracking-tight text-pine-950 sm:text-5xl lg:text-[56px]">
                 <span className="mask-line"><span style={{ "--d": "140ms" } as React.CSSProperties}>Ten kinds of quiet,</span></span>
-                <span className="mask-line"><span style={{ "--d": "260ms" } as React.CSSProperties}>one <em className="not-italic text-pine-600">restless</em> coastline.</span></span>
+                <span className="mask-line"><span style={{ "--d": "260ms" } as React.CSSProperties}>one <em className="not-italic text-pine-600">ancient</em> highland.</span></span>
               </h1>
               <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-soft">
-                Treehouses in the valley fog, houseboats in the harbor, adobe under desert stars —
+                Juniper treehouses on the Semien rim, lakeboats on Tana, courtyard houses inside Harar's walls —
                 every stay on Haven is walked, slept in and sketched by our survey team before it's listed.
               </p>
             </div>
@@ -126,7 +126,7 @@ export default function Browse() {
                 <ICompass className="h-10 w-10 text-pine-400" />
                 <h2 className="mt-4 font-display text-2xl font-semibold text-pine-900">Nothing on the chart here</h2>
                 <p className="mt-2 max-w-sm text-sm text-ink-soft">
-                  No stays match that combination of filters. Loosen the price range or clear your dates — the coast is forgiving.
+                  No stays match that combination of filters. Loosen the price range or clear your dates — the highlands are patient.
                 </p>
                 <button onClick={s.reset} className="mt-5 rounded-full bg-pine-800 px-6 py-2.5 text-sm font-bold text-paper transition hover:bg-pine-700">
                   Clear all filters

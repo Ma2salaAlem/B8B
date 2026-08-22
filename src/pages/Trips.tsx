@@ -79,9 +79,9 @@ export default function Trips() {
             </h2>
             <p className="mt-2 max-w-sm text-sm text-ink-soft">
               {tab === "upcoming"
-                ? "The coast isn't going anywhere, but the good dates do. Pick your next haven."
+                ? "The highlands aren't going anywhere, but the good dates do. Pick your next haven."
                 : tab === "past"
-                ? "Your stayed nights will collect here like sea glass."
+                ? "Your stayed nights will collect here like river stones on the Omo."
                 : "Cancelled reservations are kept here for your records."}
             </p>
             {tab === "upcoming" && (

@@ -32,7 +32,7 @@ export interface Listing {
   amenities: string[];
   photo: string;
   gallery: GalleryShot[];
-  mapX: number; // 0–1000 on the Cedar Coast chart
+  mapX: number; // 0–1000 on the Ethiopia chart
   mapY: number; // 0–700
   rating: number;
   reviewCount: number;

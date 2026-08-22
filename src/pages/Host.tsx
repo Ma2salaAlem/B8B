@@ -3,7 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { useStore, type NewListingInput } from "../lib/store";
 import { AMENITIES, PHOTO_POOL, TOWNS, townCoords } from "../lib/seed";
-import { CedarChart } from "../components/MapView";
+import { EthiopiaChart } from "../components/MapView";
 import { Avatar, Counter, Reveal, Stars, Toggle, money } from "../components/ui";
 import {
   IArrowR, IBanknote, ICalendar, IEye, IGauge, ILogo, IPencil, IPin, IPlus, IStar, IX, ICheck,
@@ -273,7 +273,7 @@ function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => voi
   const placePin = (e: MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = Math.round(((e.clientX - rect.left) / rect.width) * 1000);
-    const y = Math.round(((e.clientY - rect.top) / rect.height) * 700);
+    const y = Math.round(((e.clientY - rect.top) / rect.height) * 720);
     if (x < 300) return; // that's the sea — nice try
     setPin({ x, y });
   };
@@ -439,15 +439,15 @@ function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => voi
 
           {/* pin placement */}
           <div>
-            <span className={label}>DROP A PIN ON THE CHART — click land, not sea</span>
+            <span className={label}>DROP A PIN ON THE CHART — click near your town</span>
             <div className="overflow-hidden rounded-xl border border-line">
-              <svg viewBox="0 0 1000 700" preserveAspectRatio="none" className="h-56 w-full cursor-crosshair" onClick={placePin} role="img" aria-label="Place your listing on the map">
-                <CedarChart>
+              <svg viewBox="0 0 1000 720" preserveAspectRatio="none" className="h-56 w-full cursor-crosshair" onClick={placePin} role="img" aria-label="Place your listing on the map">
+                <EthiopiaChart>
                   <g transform={`translate(${pin.x} ${pin.y})`} className="pointer-events-none">
                     <circle r="16" fill="#E39B31" opacity="0.35" className="pin-pulse" />
                     <circle r="7.5" fill="#E39B31" stroke="#16312A" strokeWidth="3" />
                   </g>
-                </CedarChart>
+                </EthiopiaChart>
               </svg>
             </div>
             <p className="mt-1.5 text-xs text-ink-soft">Approximate is fine — exact addresses are shared after booking.</p>

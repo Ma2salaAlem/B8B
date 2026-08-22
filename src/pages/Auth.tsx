@@ -61,7 +61,7 @@ export default function Auth() {
         <div className="w-full max-w-md">
           <ILogo className="h-10 w-10 lg:hidden" />
           <h1 className="mt-6 font-display text-[34px] font-semibold leading-tight tracking-tight text-pine-950 lg:mt-0">
-            <span className="mask-line"><span>{mode === "signin" ? "Welcome back to the coast." : "Pitch your tent here."}</span></span>
+            <span className="mask-line"><span>{mode === "signin" ? "Welcome back to the highlands." : "Pitch your tent here."}</span></span>
           </h1>
           <p className="mt-2 text-[15px] text-ink-soft">
             {mode === "signin"
@@ -154,11 +154,11 @@ export default function Auth() {
           <div className="mt-6 rounded-xl border border-dashed border-pine-300 bg-pine-50/60 p-4">
             <p className="text-xs font-bold tracking-widest text-pine-700">DEMO ACCOUNTS — ONE CLICK</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <button onClick={() => fill("host@haven.demo", "cedar-dune-8")} className="rounded-full border border-pine-300 bg-paper px-4 py-2 text-xs font-bold text-pine-800 transition hover:bg-pine-800 hover:text-paper">
-                Maya · Superhost
+              <button onClick={() => fill("host@haven.demo", "buna-gebeta-8")} className="rounded-full border border-pine-300 bg-paper px-4 py-2 text-xs font-bold text-pine-800 transition hover:bg-pine-800 hover:text-paper">
+                Meron · Superhost
               </button>
-              <button onClick={() => fill("traveler@haven.demo", "salt-fern-4")} className="rounded-full border border-pine-300 bg-paper px-4 py-2 text-xs font-bold text-pine-800 transition hover:bg-pine-800 hover:text-paper">
-                Jonas · Traveller
+              <button onClick={() => fill("traveler@haven.demo", "teff-injera-4")} className="rounded-full border border-pine-300 bg-paper px-4 py-2 text-xs font-bold text-pine-800 transition hover:bg-pine-800 hover:text-paper">
+                Yonas · Traveller
               </button>
             </div>
             <p className="mt-2 text-xs text-ink-soft">Click to autofill, then hit Sign in. In production this is JWT + httpOnly refresh cookies — see <code className="font-mono text-[11px] text-pine-700">blueprint/</code>.</p>
@@ -170,15 +170,15 @@ export default function Auth() {
       <div className="relative hidden overflow-hidden lg:block">
         <img
           src="https://image.qwenlm.ai/generated-images/19af859e-08df-48ad-83d7-79f809c92d7c/_result.png"
-          alt="Dune Crest House above the surf at Driftwood Bay"
+          alt="Chamo Shore House above the water at Arba Minch"
           className="kenburns h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-pine-950/85 via-pine-950/25 to-pine-950/10" />
         <div className="absolute bottom-0 left-0 right-0 p-12">
           <p className="font-display text-3xl font-medium leading-snug text-paper xl:text-4xl">
-            "We booked a treehouse for two nights<br /> and stayed for six."
+            "Crocodiles at noon, pink skies over the lake<br /> at dinner. We extended twice."
           </p>
-          <p className="mt-3 text-sm font-semibold tracking-wide text-marigold-300">— AMARA, STAYED AT FERN HOLLOW</p>
+          <p className="mt-3 text-sm font-semibold tracking-wide text-marigold-300">— AMARA, STAYED AT CHAMO SHORE HOUSE</p>
           <div className="mt-8 flex gap-8 border-t border-paper/25 pt-6 text-paper">
             <span className="flex items-center gap-2 text-sm font-semibold"><IStar className="h-4 w-4 text-marigold-400" /> 4.91 average rating</span>
             <span className="flex items-center gap-2 text-sm font-semibold"><IUsers className="h-4 w-4 text-marigold-400" /> 2,300+ hosted nights</span>

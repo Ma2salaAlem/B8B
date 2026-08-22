@@ -141,7 +141,7 @@ export default function FilterBar({ count }: { count: number }) {
                     <IPlus className="h-4 w-4" />
                   </button>
                 </div>
-                <p className="mt-3 text-xs text-ink-soft">"Any" shows every stay on the coast.</p>
+                <p className="mt-3 text-xs text-ink-soft">"Any" shows every stay in Ethiopia.</p>
               </div>
             )}
           </div>
@@ -159,7 +159,7 @@ export default function FilterBar({ count }: { count: number }) {
           )}
 
           <p className="ml-auto hidden text-sm text-ink-soft md:block">
-            <span className="font-bold text-ink">{count}</span> stay{count === 1 ? "" : "s"} on the coast
+            <span className="font-bold text-ink">{count}</span> stay{count === 1 ? "" : "s"} across Ethiopia
           </p>
 
           {/* sort + view */}

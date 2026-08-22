@@ -56,7 +56,7 @@ CREATE TABLE properties (
   property_type TEXT NOT NULL,               -- cabin, treehouse, houseboat...
   description   TEXT NOT NULL,
   town          TEXT NOT NULL,
-  region        TEXT NOT NULL DEFAULT 'Cedar Coast',
+  region        TEXT NOT NULL DEFAULT 'Ethiopia',
   address_line  TEXT,                        -- exact address, shown post-booking
   lat           DOUBLE PRECISION NOT NULL,   -- real maps: swap the SVG chart for these
   lng           DOUBLE PRECISION NOT NULL,
@@ -151,7 +151,7 @@ CREATE TRIGGER trg_rating AFTER INSERT OR UPDATE ON reviews
 -- ---------- seed (matches the prototype's demo accounts) ----------
 INSERT INTO users (email, password_hash, full_name, role, superhost)
 VALUES
-  ('host@haven.demo',     crypt('cedar-dune-8', gen_salt('bf')), 'Maya Chen',   'host', TRUE),
-  ('traveler@haven.demo', crypt('salt-fern-4',  gen_salt('bf')), 'Jonas Reyes', 'traveler', FALSE)
+  ('host@haven.demo',     crypt('buna-gebeta-8', gen_salt('bf')), 'Meron Tadesse', 'host', TRUE),
+  ('traveler@haven.demo', crypt('teff-injera-4', gen_salt('bf')), 'Yonas Bekele',  'traveler', FALSE)
 ON CONFLICT (email) DO NOTHING;
 -- (needs pgcrypto extension for crypt/gen_salt in real deployments)

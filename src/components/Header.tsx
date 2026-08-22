@@ -68,7 +68,7 @@ export default function Header() {
         >
           <span className="flex min-w-0 items-center gap-1.5 text-sm font-semibold text-ink">
             <ISearch className="h-4 w-4 shrink-0 text-pine-600" />
-            <span className="truncate">{query.trim() ? query.trim() : "Search the coast"}</span>
+            <span className="truncate">{query.trim() ? query.trim() : "Search Ethiopia"}</span>
           </span>
           <span className="mx-3 h-5 w-px shrink-0 bg-line" />
           <span className="flex shrink-0 items-center gap-1.5 text-sm text-ink-soft">

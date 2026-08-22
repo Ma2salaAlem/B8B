@@ -6,7 +6,7 @@ import { iso, SEED_REVIEWS } from "../lib/seed";
 import type { DateRange } from "../lib/types";
 import DatePicker from "../components/DatePicker";
 import StayCard from "../components/StayCard";
-import { CedarChart } from "../components/MapView";
+import { EthiopiaChart } from "../components/MapView";
 import { Avatar, Modal, Reveal, Stars, money } from "../components/ui";
 import {
   AMENITY_ICONS, IBath, IBed, IChevL, IChevR, IHeart, IMinus, IPin, IPlus, IRuler, IStar, IUsers, IX, ICheck,
@@ -60,7 +60,7 @@ export default function Stay() {
         <h1 className="font-display text-3xl font-semibold">This stay has wandered off the chart</h1>
         <p className="mt-3 text-ink-soft">The listing you're after doesn't exist (yet).</p>
         <Link to="/" className="mt-6 inline-block rounded-full bg-pine-800 px-6 py-3 text-sm font-bold text-paper hover:bg-pine-700">
-          Back to the coast
+          Back to the highlands
         </Link>
       </div>
     );
@@ -134,7 +134,7 @@ export default function Stay() {
     <div className="mx-auto max-w-[1240px] px-4 pb-20 sm:px-6 lg:px-10">
       {/* breadcrumb */}
       <nav className="flex items-center gap-2 py-5 text-sm text-ink-soft">
-        <Link to="/" className="font-semibold text-pine-700 hover:underline">Cedar Coast</Link>
+        <Link to="/" className="font-semibold text-pine-700 hover:underline">Ethiopia</Link>
         <span>/</span>
         <Link to="/" className="hover:underline">{listing.town}</Link>
         <span>/</span>
@@ -241,15 +241,15 @@ export default function Stay() {
 
           <section className="border-b border-line py-6">
             <h2 className="font-display text-xl font-semibold text-pine-950">Where you'll be</h2>
-            <p className="mt-1 text-sm text-ink-soft">{listing.town} · {listing.region} region</p>
+            <p className="mt-1 text-sm text-ink-soft">{listing.town} · {listing.region}</p>
             <div className="mt-4 overflow-hidden rounded-xl border border-line">
-              <svg viewBox="140 40 760 620" className="h-72 w-full" role="img" aria-label={`Map showing ${listing.title} in ${listing.town}`}>
-                <CedarChart>
+              <svg viewBox="120 30 760 660" className="h-72 w-full" role="img" aria-label={`Map showing ${listing.title} in ${listing.town}`}>
+                <EthiopiaChart>
                   <g transform={`translate(${listing.mapX} ${listing.mapY})`}>
                     <circle r="18" fill="#2C614B" opacity="0.3" className="pin-pulse" />
                     <circle r="8" fill="#E39B31" stroke="#16312A" strokeWidth="3" />
                   </g>
-                </CedarChart>
+                </EthiopiaChart>
               </svg>
             </div>
           </section>

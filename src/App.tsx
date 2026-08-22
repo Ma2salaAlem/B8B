@@ -25,7 +25,7 @@ function NotFound() {
     <div className="mx-auto max-w-xl px-6 py-28 text-center">
       <p className="font-display text-[80px] font-bold leading-none text-pine-200">404</p>
       <h1 className="mt-2 font-display text-3xl font-semibold text-pine-950">Off the chart, friend.</h1>
-      <p className="mt-3 text-ink-soft">That page isn't on our survey of the coast. Let's get you back to dry land.</p>
+      <p className="mt-3 text-ink-soft">That page isn't on our survey of Ethiopia. Let's get you back on the trail.</p>
       <Link to="/" className="mt-6 inline-block rounded-full bg-pine-800 px-7 py-3 text-sm font-bold text-paper transition hover:bg-pine-700">
         Back to Haven
       </Link>
@@ -44,8 +44,8 @@ function Footer() {
               <span className="font-display text-2xl font-semibold text-paper">Haven</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-pine-200">
-              A rental marketplace for the Cedar Coast — hand-surveyed stays, honest calendars,
-              hosts who live where you're sleeping.
+              A rental marketplace for Ethiopia — hand-surveyed stays from the Semien rim to the
+              Harar walls, honest calendars, hosts who live where you're sleeping.
             </p>
             <p className="mt-5 rounded-lg border border-pine-800 bg-pine-900/70 px-4 py-3 text-xs leading-relaxed text-pine-300">
               <span className="font-bold text-marigold-300">Working prototype.</span> Data lives in your browser's localStorage,
@@ -82,7 +82,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-pine-800 pt-6 text-xs text-pine-300">
-          <p>© 2026 Haven Stays Cooperative · 49.3° N, somewhere salt-windy</p>
+          <p>© 2026 Haven Stays Cooperative · 9.1° N, on the roof of Africa</p>
           <p className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-marigold-400" />
             All systems charted · React + TS + Tailwind, PostgreSQL-ready
