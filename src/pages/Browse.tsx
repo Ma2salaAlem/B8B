@@ -6,11 +6,13 @@ import FilterBar from "../components/FilterBar";
 import StayCard from "../components/StayCard";
 import MapView from "../components/MapView";
 import { Reveal } from "../components/ui";
-import { ICompass, IGrid, IMap, IPin } from "../components/icons";
+import { ICompass, IGrid, IMap, IPin, ISparkle } from "../components/icons";
+import { useConcierge } from "../components/Concierge";
 
 export default function Browse() {
   const { listings, bookings, favorites } = useStore();
   const s = useSearch();
+  const concierge = useConcierge();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileMap, setMobileMap] = useState(false);
@@ -128,9 +130,17 @@ export default function Browse() {
                 <p className="mt-2 max-w-sm text-sm text-ink-soft">
                   No stays match that combination of filters. Loosen the price range or clear your dates — the highlands are patient.
                 </p>
-                <button onClick={s.reset} className="mt-5 rounded-full bg-pine-800 px-6 py-2.5 text-sm font-bold text-paper transition hover:bg-pine-700">
-                  Clear all filters
-                </button>
+                <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+                  <button onClick={s.reset} className="rounded-full bg-pine-800 px-6 py-2.5 text-sm font-bold text-paper transition hover:bg-pine-700">
+                    Clear all filters
+                  </button>
+                  <button
+                    onClick={() => { s.reset(); concierge.setOpen(true); }}
+                    className="flex items-center gap-1.5 rounded-full border border-pine-300 bg-paper px-5 py-2.5 text-sm font-bold text-pine-800 transition hover:bg-pine-50"
+                  >
+                    <ISparkle className="h-3.5 w-3.5 text-marigold-600" /> Ask the concierge
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 xl:grid-cols-3">

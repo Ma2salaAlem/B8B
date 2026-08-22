@@ -4,6 +4,7 @@ import { StoreProvider } from "./lib/store";
 import { SearchProvider } from "./lib/search";
 import Header from "./components/Header";
 import { ToastHost } from "./components/ui";
+import { ConciergeProvider } from "./components/Concierge";
 import { ILogo } from "./components/icons";
 import Browse from "./pages/Browse";
 import Stay from "./pages/Stay";
@@ -98,22 +99,24 @@ export default function App() {
     <StoreProvider>
       <SearchProvider>
         <HashRouter>
-          <ScrollToTop />
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <div className="flex-1">
-              <Routes>
-                <Route path="/" element={<Browse />} />
-                <Route path="/stay/:id" element={<Stay />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/host" element={<Host />} />
-                <Route path="/trips" element={<Trips />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+          <ConciergeProvider>
+            <ScrollToTop />
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <div className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Browse />} />
+                  <Route path="/stay/:id" element={<Stay />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/host" element={<Host />} />
+                  <Route path="/trips" element={<Trips />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
-          <ToastHost />
+            <ToastHost />
+          </ConciergeProvider>
         </HashRouter>
       </SearchProvider>
     </StoreProvider>

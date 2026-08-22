@@ -27,6 +27,12 @@ const S = ({
 
 type P = { className?: string };
 
+export const ISparkle = ({ className }: P) => (
+  <S className={className} filled strokeWidth={0}>
+    <path d="M12 2.5c.6 3.6 1.7 5.9 3.4 7.1 1.5 1 3.4 1.7 6.1 1.9v1c-2.7.2-4.6.9-6.1 1.9-1.7 1.2-2.8 3.5-3.4 7.1h-1c-.6-3.6-1.7-5.9-3.4-7.1-1.5-1-3.4-1.7-6.1-1.9v-1c2.7-.2 4.6-.9 6.1-1.9 1.7-1.2 2.8-3.5 3.4-7.1h1Z" />
+  </S>
+);
+
 export const ILogo = ({ className }: P) => (
   <svg viewBox="0 0 32 32" className={className ?? "h-8 w-8"} aria-hidden="true">
     <rect width="32" height="32" rx="8" fill="#234E3D" />
