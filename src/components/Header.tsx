@@ -3,12 +3,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { useStore } from "../lib/store";
 import { useSearch } from "../lib/search";
+import { useLang } from "../lib/i18n";
 import { Avatar } from "./ui";
 import { ICalendar, IChevD, IHeart, ILogOut, ILogo, IPin, ISearch, IUsers } from "./icons";
 
 export default function Header() {
   const { currentUser, logout, favorites } = useStore();
   const { query, setQuery, range, guests } = useSearch();
+  const { t, lang, setLang, count } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -35,8 +37,8 @@ export default function Header() {
     range.checkIn && range.checkOut
       ? `${format(parseISO(range.checkIn), "MMM d")} – ${format(parseISO(range.checkOut), "MMM d")}`
       : range.checkIn
-      ? `${format(parseISO(range.checkIn), "MMM d")} – Add nights`
-      : "Any week";
+      ? `${format(parseISO(range.checkIn), "MMM d")} – ${t("Add nights")}`
+      : t("Any week");
 
   const goSearch = () => {
     if (!isBrowse) navigate("/");
@@ -48,7 +50,7 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b bg-paper/92 backdrop-blur-md transition-shadow duration-300 ${
+      className={`flag-stripe sticky top-0 z-50 border-b bg-paper/92 backdrop-blur-md transition-shadow duration-300 ${
         scrolled ? "border-line shadow-[0_4px_20px_-8px_rgb(22_36_29/0.15)]" : "border-transparent"
       }`}
     >
@@ -68,7 +70,7 @@ export default function Header() {
         >
           <span className="flex min-w-0 items-center gap-1.5 text-sm font-semibold text-ink">
             <ISearch className="h-4 w-4 shrink-0 text-pine-600" />
-            <span className="truncate">{query.trim() ? query.trim() : "Search Ethiopia"}</span>
+            <span className="truncate">{query.trim() ? query.trim() : t("Search Ethiopia")}</span>
           </span>
           <span className="mx-3 h-5 w-px shrink-0 bg-line" />
           <span className="flex shrink-0 items-center gap-1.5 text-sm text-ink-soft">
@@ -78,7 +80,7 @@ export default function Header() {
           <span className="mx-3 h-5 w-px shrink-0 bg-line" />
           <span className="flex shrink-0 items-center gap-1.5 text-sm text-ink-soft">
             <IUsers className="h-4 w-4 text-pine-600" />
-            {guests ? `${guests} guest${guests > 1 ? "s" : ""}` : "Guests"}
+            {guests ? count(guests, "guest", "guests") : t("Guests")}
           </span>
           <span className="ml-3 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-pine-700 text-paper transition-colors group-hover:bg-pine-600">
             <ISearch className="h-4 w-4" />
@@ -92,8 +94,17 @@ export default function Header() {
               location.pathname === "/host" ? "bg-pine-100 text-pine-800" : "text-ink hover:bg-parch"
             }`}
           >
-            Become a host
+            {t("Become a host")}
           </Link>
+
+          <button
+            onClick={() => setLang(lang === "en" ? "am" : "en")}
+            className="rounded-full border border-line px-3 py-1.5 text-sm font-bold text-pine-800 transition hover:border-pine-400 hover:bg-parch"
+            aria-label={lang === "en" ? "Switch to Amharic" : "Switch to English"}
+            title={lang === "en" ? "አማርኛ" : "English"}
+          >
+            {lang === "en" ? "አማ" : "EN"}
+          </button>
 
           <button
             onClick={() => {
@@ -101,8 +112,8 @@ export default function Header() {
               window.setTimeout(() => document.getElementById("filter-bar")?.scrollIntoView({ behavior: "smooth" }), 80);
             }}
             className="relative hidden rounded-full p-2.5 text-ink transition hover:bg-parch sm:block"
-            aria-label="Saved stays"
-            title="Saved stays"
+            aria-label={t("Saved stays")}
+            title={t("Saved stays")}
           >
             <IHeart className="h-5 w-5" filled={favorites.length > 0} />
             {favorites.length > 0 && (
@@ -133,13 +144,13 @@ export default function Header() {
                   </div>
                   <nav className="py-1.5 text-sm">
                     <Link to="/trips" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 font-medium transition hover:bg-parch" role="menuitem">
-                      <IPin className="h-4 w-4 text-pine-600" /> Your trips
+                      <IPin className="h-4 w-4 text-pine-600" /> {t("Your trips")}
                     </Link>
                     <Link to="/host" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 font-medium transition hover:bg-parch" role="menuitem">
-                      <ILogo className="h-4 w-4" /> Host dashboard
+                      <ILogo className="h-4 w-4" /> {t("Host dashboard")}
                     </Link>
                     <button onClick={() => { logout(); setMenuOpen(false); navigate("/"); }} className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left font-medium text-ember-600 transition hover:bg-parch" role="menuitem">
-                      <ILogOut className="h-4 w-4" /> Sign out
+                      <ILogOut className="h-4 w-4" /> {t("Sign out")}
                     </button>
                   </nav>
                 </div>
@@ -150,7 +161,7 @@ export default function Header() {
               to="/auth"
               className="rounded-full bg-pine-800 px-5 py-2.5 text-sm font-semibold text-paper shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-pine-700 hover:shadow-lift"
             >
-              Sign in
+              {t("Sign in")}
             </Link>
           )}
         </div>

@@ -10,8 +10,9 @@ import {
 import { addDays, areIntervalsOverlapping, differenceInDays, parseISO } from "date-fns";
 import { SEED_BOOKINGS, SEED_LISTINGS, SEED_USERS, daysFromNow, hash, iso } from "./seed";
 import type { Booking, DateRange, Listing, ToastMsg, User } from "./types";
+import type { PaymentMethod } from "./ethiopia";
 
-const V = "haven.v4";
+const V = "haven.v5"; // v5: prices in Birr, new towns and amenities
 const LS = {
   users: `${V}.users`,
   listings: `${V}.listings`,
@@ -73,6 +74,7 @@ interface Store {
     listingId: string;
     range: DateRange;
     guests: number;
+    payment: PaymentMethod;
   }) => { ok: true; booking: Booking } | { ok: false; error: string };
   cancelBooking: (id: string) => void;
   recordView: (id: string) => void;
@@ -241,7 +243,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   /* ------------------------------ bookings ------------------------------ */
   const createBooking = useCallback(
-    (input: { listingId: string; range: DateRange; guests: number }) => {
+    (input: { listingId: string; range: DateRange; guests: number; payment: PaymentMethod }) => {
       const listing = listings.find((l) => l.id === input.listingId);
       if (!listing) return { ok: false as const, error: "That stay no longer exists." };
       if (!currentUser) return { ok: false as const, error: "Sign in to reserve." };
@@ -279,6 +281,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         total: nightly + listing.cleaningFee + service,
         breakdown: { nightly, cleaning: listing.cleaningFee, service },
         status: "confirmed",
+        payment: input.payment,
         createdAt: daysFromNow(0),
       };
       setBookings((b) => [booking, ...b]);

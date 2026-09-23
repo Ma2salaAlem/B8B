@@ -219,4 +219,4 @@ export function ToastHost() {
 }
 
 /* ------------------------------- price formatter ------------------------------ */
-export const money = (n: number) => `$${n.toLocaleString()}`;
+export { birr as money } from "../lib/ethiopia";

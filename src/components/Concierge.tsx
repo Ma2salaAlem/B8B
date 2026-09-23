@@ -142,8 +142,8 @@ function ConciergeHost({ queueRef }: { queueRef: MutableRefObject<string | null>
     if (f.towns.length) chips.push(...f.towns);
     if (f.types.length) chips.push(...f.types);
     else if (f.tags.length) chips.push(...f.tags);
-    if (f.maxPrice !== undefined) chips.push(`≤ $${f.maxPrice}/night`);
-    if (f.minPrice !== undefined) chips.push(`≥ $${f.minPrice}/night`);
+    if (f.maxPrice !== undefined) chips.push(`≤ ${money(f.maxPrice)}/night`);
+    if (f.minPrice !== undefined) chips.push(`≥ ${money(f.minPrice)}/night`);
     if (f.month !== undefined) chips.push(MONTH_NAMES[f.month - 1]);
     if (f.guests !== undefined) chips.push(`${f.guests} guests`);
     chips.push(...f.amenities);

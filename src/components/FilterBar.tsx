@@ -5,11 +5,13 @@ import { PRICE_MAX, useSearch } from "../lib/search";
 import { CATEGORY_ICONS, IChevD, IHeart, IMinus, IPlus, IUsers, IX } from "./icons";
 import DatePicker from "./DatePicker";
 import { money } from "./ui";
+import { useLang } from "../lib/i18n";
 
 type Pop = "price" | "dates" | "guests" | null;
 
-export default function FilterBar({ count }: { count: number }) {
+export default function FilterBar({ count: resultCount }: { count: number }) {
   const s = useSearch();
+  const { t, count } = useLang();
   const [open, setOpen] = useState<Pop>(null);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -39,7 +41,7 @@ export default function FilterBar({ count }: { count: number }) {
             return (
               <button key={c} onClick={() => s.setCategory(c)} className={`${pill(active)} shrink-0`}>
                 {Icon && <Icon className="h-4 w-4" />}
-                {c}
+                {t(c)}
               </button>
             );
           })}
@@ -52,21 +54,21 @@ export default function FilterBar({ count }: { count: number }) {
             <button onClick={() => setOpen(open === "dates" ? null : "dates")} className={pill(!!s.range.checkIn)}>
               {s.range.checkIn && s.range.checkOut
                 ? `${format(parseISO(s.range.checkIn), "MMM d")} – ${format(parseISO(s.range.checkOut), "MMM d")}`
-                : "Dates"}
+                : t("Dates")}
               <IChevD className={`h-3.5 w-3.5 transition-transform ${open === "dates" ? "rotate-180" : ""}`} />
             </button>
             {open === "dates" && (
               <div className="pop-in absolute left-0 top-[calc(100%+8px)] z-40 rounded-xl border border-line bg-paper p-4 shadow-float">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm font-bold">When are you travelling?</p>
+                  <p className="text-sm font-bold">{t("When are you travelling?")}</p>
                   {(s.range.checkIn || s.range.checkOut) && (
                     <button onClick={() => s.setRange({ checkIn: null, checkOut: null })} className="flex items-center gap-1 text-xs font-semibold text-ember-600 hover:underline">
-                      <IX className="h-3 w-3" /> Clear
+                      <IX className="h-3 w-3" /> {t("Clear")}
                     </button>
                   )}
                 </div>
                 <DatePicker value={s.range} onChange={s.setRange} months={2} />
-                <p className="mt-2 text-xs text-ink-soft">Only stays free for your nights are shown.</p>
+                <p className="mt-2 text-xs text-ink-soft">{t("Only stays free for your nights are shown.")}</p>
               </div>
             )}
           </div>
@@ -76,12 +78,12 @@ export default function FilterBar({ count }: { count: number }) {
             <button onClick={() => setOpen(open === "price" ? null : "price")} className={pill(s.price[0] > 0 || s.price[1] < PRICE_MAX)}>
               {s.price[0] > 0 || s.price[1] < PRICE_MAX
                 ? `${money(s.price[0])} – ${s.price[1] >= PRICE_MAX ? `${money(PRICE_MAX)}+` : money(s.price[1])}`
-                : "Price"}
+                : t("Price")}
               <IChevD className={`h-3.5 w-3.5 transition-transform ${open === "price" ? "rotate-180" : ""}`} />
             </button>
             {open === "price" && (
               <div className="pop-in absolute left-0 top-[calc(100%+8px)] z-40 w-72 rounded-xl border border-line bg-paper p-5 shadow-float">
-                <p className="text-sm font-bold">Nightly price</p>
+                <p className="text-sm font-bold">{t("Nightly price")}</p>
                 <div className="relative mt-5 h-8">
                   <div className="absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full bg-pine-100" />
                   <div
@@ -92,15 +94,15 @@ export default function FilterBar({ count }: { count: number }) {
                     }}
                   />
                   <input
-                    type="range" min={0} max={PRICE_MAX} step={5} value={s.price[0]}
+                    type="range" min={0} max={PRICE_MAX} step={500} value={s.price[0]}
                     aria-label="Minimum price"
-                    onChange={(e) => s.setPrice([Math.min(+e.target.value, s.price[1] - 10), s.price[1]])}
+                    onChange={(e) => s.setPrice([Math.min(+e.target.value, s.price[1] - 1000), s.price[1]])}
                     className="range-dual"
                   />
                   <input
-                    type="range" min={0} max={PRICE_MAX} step={5} value={s.price[1]}
+                    type="range" min={0} max={PRICE_MAX} step={500} value={s.price[1]}
                     aria-label="Maximum price"
-                    onChange={(e) => s.setPrice([s.price[0], Math.max(+e.target.value, s.price[0] + 10)])}
+                    onChange={(e) => s.setPrice([s.price[0], Math.max(+e.target.value, s.price[0] + 1000)])}
                     className="range-dual"
                   />
                 </div>
@@ -116,12 +118,12 @@ export default function FilterBar({ count }: { count: number }) {
           <div className="relative">
             <button onClick={() => setOpen(open === "guests" ? null : "guests")} className={pill(s.guests > 0)}>
               <IUsers className="h-4 w-4" />
-              {s.guests > 0 ? `${s.guests}+ guests` : "Guests"}
+              {s.guests > 0 ? `${count(s.guests, "guest", "guests")}+` : t("Guests")}
               <IChevD className={`h-3.5 w-3.5 transition-transform ${open === "guests" ? "rotate-180" : ""}`} />
             </button>
             {open === "guests" && (
               <div className="pop-in absolute left-0 top-[calc(100%+8px)] z-40 w-64 rounded-xl border border-line bg-paper p-5 shadow-float">
-                <p className="text-sm font-bold">How many travellers?</p>
+                <p className="text-sm font-bold">{t("How many travellers?")}</p>
                 <div className="mt-4 flex items-center justify-between">
                   <button
                     onClick={() => s.setGuests(Math.max(0, s.guests - 1))}
@@ -131,7 +133,7 @@ export default function FilterBar({ count }: { count: number }) {
                   >
                     <IMinus className="h-4 w-4" />
                   </button>
-                  <span className="text-lg font-bold">{s.guests === 0 ? "Any" : s.guests}</span>
+                  <span className="text-lg font-bold">{s.guests === 0 ? t("Any") : s.guests}</span>
                   <button
                     onClick={() => s.setGuests(Math.min(12, s.guests + 1))}
                     className="grid h-9 w-9 place-items-center rounded-full border border-line transition hover:border-pine-500 disabled:opacity-30"
@@ -141,7 +143,7 @@ export default function FilterBar({ count }: { count: number }) {
                     <IPlus className="h-4 w-4" />
                   </button>
                 </div>
-                <p className="mt-3 text-xs text-ink-soft">"Any" shows every stay in Ethiopia.</p>
+                <p className="mt-3 text-xs text-ink-soft">{t("any.note")}</p>
               </div>
             )}
           </div>
@@ -149,17 +151,17 @@ export default function FilterBar({ count }: { count: number }) {
           {/* saved */}
           <button onClick={() => s.setSavedOnly(!s.savedOnly)} className={pill(s.savedOnly)}>
             <IHeart className="h-4 w-4" filled={s.savedOnly} />
-            Saved
+            {t("Saved")}
           </button>
 
           {s.activeCount > 0 && (
             <button onClick={s.reset} className="flex items-center gap-1 px-2 py-1 text-sm font-semibold text-pine-700 underline-offset-2 transition hover:underline">
-              <IX className="h-3.5 w-3.5" /> Clear all ({s.activeCount})
+              <IX className="h-3.5 w-3.5" /> {t("Clear all")} ({s.activeCount})
             </button>
           )}
 
           <p className="ml-auto hidden text-sm text-ink-soft md:block">
-            <span className="font-bold text-ink">{count}</span> stay{count === 1 ? "" : "s"} across Ethiopia
+            <span className="font-bold text-ink">{resultCount}</span> {t("stays across Ethiopia")}
           </p>
 
           {/* sort + view */}
@@ -170,23 +172,23 @@ export default function FilterBar({ count }: { count: number }) {
               aria-label="Sort stays"
               className="cursor-pointer rounded-full border border-line bg-paper px-3.5 py-2 text-sm font-semibold text-ink outline-none transition hover:border-pine-400"
             >
-              <option value="recommended">Recommended</option>
-              <option value="price-asc">Price · low to high</option>
-              <option value="price-desc">Price · high to low</option>
-              <option value="rating">Top rated</option>
+              <option value="recommended">{t("Recommended")}</option>
+              <option value="price-asc">{t("Price · low to high")}</option>
+              <option value="price-desc">{t("Price · high to low")}</option>
+              <option value="rating">{t("Top rated")}</option>
             </select>
             <div className="hidden overflow-hidden rounded-full border border-line lg:flex">
               <button
                 onClick={() => s.setViewMode("split")}
                 className={`px-3 py-2 text-xs font-bold tracking-wide transition ${s.viewMode === "split" ? "bg-pine-800 text-paper" : "bg-paper text-ink hover:bg-parch"}`}
               >
-                MAP + GRID
+                {t("MAP + GRID")}
               </button>
               <button
                 onClick={() => s.setViewMode("grid")}
                 className={`px-3 py-2 text-xs font-bold tracking-wide transition ${s.viewMode === "grid" ? "bg-pine-800 text-paper" : "bg-paper text-ink hover:bg-parch"}`}
               >
-                GRID
+                {t("GRID")}
               </button>
             </div>
           </div>

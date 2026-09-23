@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { useStore } from "../lib/store";
+import { useLang } from "../lib/i18n";
+import { formatEthRange, paymentLabel } from "../lib/ethiopia";
 import { Avatar, Modal, Reveal, money } from "../components/ui";
 import { ICalendar, IPin, IUsers, IArrowR, ITrash } from "../components/icons";
 
@@ -9,6 +11,7 @@ type Tab = "upcoming" | "past" | "cancelled";
 
 export default function Trips() {
   const { currentUser, bookings, listings, cancelBooking } = useStore();
+  const { t, lang, count } = useLang();
   const [tab, setTab] = useState<Tab>("upcoming");
   const [cancelId, setCancelId] = useState<string | null>(null);
 
@@ -43,29 +46,29 @@ export default function Trips() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6 lg:px-10">
       <p className="mask-line text-xs font-bold tracking-[0.28em] text-pine-600">
-        <span>YOUR TRIPS</span>
+        <span>{t("YOUR TRIPS")}</span>
       </p>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
         <h1 className="font-display text-4xl font-semibold tracking-tight text-pine-950">
-          <span className="mask-line"><span style={{ "--d": "120ms" } as React.CSSProperties}>Bags packed, {currentUser.name.split(" ")[0]}?</span></span>
+          <span className="mask-line"><span style={{ "--d": "120ms" } as React.CSSProperties}>{t("Bags packed,")} {currentUser.name.split(" ")[0]}?</span></span>
         </h1>
         <Link to="/" className="group flex items-center gap-2 text-sm font-bold text-pine-700 hover:text-pine-600">
-          Find another stay <IArrowR className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          {t("Find another stay")} <IArrowR className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
       {/* tabs */}
       <div className="mt-8 flex gap-2 border-b border-line">
-        {(["upcoming", "past", "cancelled"] as Tab[]).map((t) => (
+        {(["upcoming", "past", "cancelled"] as Tab[]).map((k) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
+            key={k}
+            onClick={() => setTab(k)}
             className={`relative px-4 py-3 text-sm font-bold capitalize transition ${
-              tab === t ? "text-pine-800" : "text-ink-soft hover:text-ink"
+              tab === k ? "text-pine-800" : "text-ink-soft hover:text-ink"
             }`}
           >
-            {t} <span className="ml-1 rounded-full bg-parch px-2 py-0.5 text-xs">{buckets[t].length}</span>
-            {tab === t && <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-pine-700" />}
+            {t(k)} <span className="ml-1 rounded-full bg-parch px-2 py-0.5 text-xs">{buckets[k].length}</span>
+            {tab === k && <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-pine-700" />}
           </button>
         ))}
       </div>
@@ -75,7 +78,7 @@ export default function Trips() {
           <div className="grid place-items-center rounded-xl border border-dashed border-pine-300 bg-pine-50/50 px-6 py-20 text-center">
             <IPin className="h-9 w-9 text-pine-400" />
             <h2 className="mt-4 font-display text-xl font-semibold text-pine-900">
-              {tab === "upcoming" ? "No trips on the horizon" : tab === "past" ? "Nothing in the logbook yet" : "No cancellations — good"}
+              {tab === "upcoming" ? t("No trips on the horizon") : tab === "past" ? "Nothing in the logbook yet" : "No cancellations — good"}
             </h2>
             <p className="mt-2 max-w-sm text-sm text-ink-soft">
               {tab === "upcoming"
@@ -86,7 +89,7 @@ export default function Trips() {
             </p>
             {tab === "upcoming" && (
               <Link to="/" className="mt-5 rounded-full bg-pine-800 px-6 py-2.5 text-sm font-bold text-paper transition hover:bg-pine-700">
-                Browse stays
+                {t("Browse stays")}
               </Link>
             )}
           </div>
@@ -101,7 +104,7 @@ export default function Trips() {
                   <Link to={`/stay/${listing.id}`} className="group relative block h-44 shrink-0 overflow-hidden rounded-lg sm:h-32 sm:w-48">
                     <img src={listing.photo} alt={listing.title} className={`h-full w-full object-cover transition duration-700 group-hover:scale-105 ${b.status === "cancelled" ? "grayscale" : ""}`} />
                     <span className={`absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${pill[b.status === "cancelled" ? "cancelled" : isPast ? "past" : "upcoming"]}`}>
-                      {b.status === "cancelled" ? "Cancelled" : isPast ? "Stayed" : "Upcoming"}
+                      {b.status === "cancelled" ? t("Cancelled") : isPast ? t("Stayed") : t("Upcoming")}
                     </span>
                   </Link>
                   <div className="min-w-0 flex-1">
@@ -111,18 +114,22 @@ export default function Trips() {
                     <p className="text-sm text-ink-soft">{listing.type} · {listing.town}</p>
                     <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm font-medium text-ink">
                       <span className="flex items-center gap-1.5"><ICalendar className="h-4 w-4 text-pine-600" /> {format(parseISO(b.checkIn), "MMM d")} – {format(parseISO(b.checkOut), "MMM d, yyyy")}</span>
-                      <span className="flex items-center gap-1.5"><IUsers className="h-4 w-4 text-pine-600" /> {b.guests} guest{b.guests > 1 ? "s" : ""} · {b.nights} nights</span>
+                      <span className="flex items-center gap-1.5"><IUsers className="h-4 w-4 text-pine-600" /> {count(b.guests, "guest", "guests")} · {count(b.nights, "night", "nights")}</span>
                     </div>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      {formatEthRange(b.checkIn, b.checkOut, lang)}
+                      {b.payment && <> · {t("Paid with")} <span className="font-semibold text-ink">{paymentLabel(b.payment)}</span></>}
+                    </p>
                   </div>
                   <div className="flex shrink-0 items-center justify-between gap-4 sm:flex-col sm:items-end">
                     <p className="text-lg font-bold">{money(b.total)}</p>
                     {b.status === "confirmed" && !isPast ? (
                       <button onClick={() => setCancelId(b.id)} className="flex items-center gap-1.5 rounded-full border border-ember-500/40 px-4 py-2 text-xs font-bold text-ember-600 transition hover:bg-ember-500 hover:text-paper">
-                        <ITrash className="h-3.5 w-3.5" /> Cancel trip
+                        <ITrash className="h-3.5 w-3.5" /> {t("Cancel trip")}
                       </button>
                     ) : (
                       <Link to={`/stay/${listing.id}`} className="text-xs font-bold text-pine-700 underline-offset-2 hover:underline">
-                        {isPast ? "Stay again?" : "View listing"}
+                        {isPast ? t("Stay again?") : t("View listing")}
                       </Link>
                     )}
                   </div>

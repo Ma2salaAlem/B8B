@@ -4,6 +4,7 @@ import type { Listing } from "../lib/types";
 import { TOWNS } from "../lib/seed";
 import { IStar, IZoomIn, IZoomOut, IX } from "./icons";
 import { Stars, money } from "./ui";
+import { birrShort } from "../lib/ethiopia";
 
 /* ------------------------------------------------------------------ */
 /*  Ethiopia — a hand-drawn survey chart reused across the app         */
@@ -268,8 +269,8 @@ export default function MapView({
           <g style={{ transition: "transform 0.2s ease" }}>
             {listings.map((l) => {
               const hot = l.id === hoveredId || l.id === selectedId;
-              const label = `$${l.price}`;
-              const w = label.length * 7.4 + 18;
+              const label = birrShort(l.price);
+              const w = label.length * 7.6 + 18;
               return (
                 <g
                   key={l.id}

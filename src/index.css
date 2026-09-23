@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Fraunces", "Georgia", serif;
-  --font-body: "Outfit", "Avenir Next", system-ui, sans-serif;
+  --font-display: "Fraunces", "Noto Serif Ethiopic", "Georgia", serif;
+  --font-body: "Outfit", "Noto Sans Ethiopic", "Avenir Next", system-ui, sans-serif;
+
+  /* the three colours of the Ethiopian flag, used as accents */
+  --color-flag-green: #078930;
+  --color-flag-yellow: #fcdd09;
+  --color-flag-red: #da121a;
 
   --color-paper: #f6f4ed;
   --color-parch: #efece2;
@@ -75,6 +80,37 @@ body::after {
 .font-display {
   font-family: var(--font-display);
   font-variation-settings: "opsz" 72;
+}
+
+/* ---------- Ethiopian accents ---------- */
+/* green–yellow–red hairline along the top of the header */
+.flag-stripe {
+  background-image: linear-gradient(
+    to right,
+    var(--color-flag-green) 0 33.34%,
+    var(--color-flag-yellow) 33.34% 66.67%,
+    var(--color-flag-red) 66.67% 100%
+  );
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+/* tibeb — the woven border of a habesha kemis, as a repeating band */
+.tibeb {
+  height: 16px;
+  background-color: var(--color-paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='16' viewBox='0 0 48 16'%3E%3Cpath d='M0 1h48M0 15h48' stroke='%2316312A' stroke-width='1.2'/%3E%3Cpath d='M8 3l5 5-5 5-5-5z' fill='%23078930'/%3E%3Cpath d='M24 3l5 5-5 5-5-5z' fill='%23FCDD09' stroke='%23A66415' stroke-width='.6'/%3E%3Cpath d='M40 3l5 5-5 5-5-5z' fill='%23DA121A'/%3E%3Cpath d='M16 5v6M13 8h6M32 5v6M29 8h6' stroke='%2316312A' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+:lang(am) body {
+  line-height: 1.6;
+}
+/* wide tracking suits Latin capitals but pulls Ethiopic syllables apart */
+:lang(am) [class*="tracking-"] {
+  letter-spacing: 0.02em;
 }
 
 /* ---------- topographic background ---------- */

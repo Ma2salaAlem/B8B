@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Listing } from "../lib/types";
 import { useStore } from "../lib/store";
+import { useLang } from "../lib/i18n";
 import { Stars, money } from "./ui";
 import { IHeart, IStar } from "./icons";
 
 export default function StayCard({ listing, compact }: { listing: Listing; compact?: boolean }) {
   const { isFav, toggleFav } = useStore();
+  const { t, count } = useLang();
   const fav = isFav(listing.id);
   const [popping, setPopping] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -32,7 +34,7 @@ export default function StayCard({ listing, compact }: { listing: Listing; compa
 
         {listing.rating >= 4.95 && listing.reviewCount > 50 && !compact && (
           <span className="absolute left-3 top-3 rounded-full bg-paper/95 px-2.5 py-1 text-[11px] font-bold tracking-wide text-pine-800 shadow-sm">
-            ★ GUEST FAVOURITE
+            ★ {t("GUEST FAVOURITE")}
           </span>
         )}
         {listing.status === "paused" && (
@@ -73,7 +75,7 @@ export default function StayCard({ listing, compact }: { listing: Listing; compa
           </h3>
           <span className="flex shrink-0 items-center gap-1 text-sm font-semibold">
             <IStar className="h-3.5 w-3.5 text-marigold-500" />
-            {listing.rating > 0 ? listing.rating.toFixed(2) : "New"}
+            {listing.rating > 0 ? listing.rating.toFixed(2) : t("New")}
           </span>
         </div>
         <p className="text-sm text-ink-soft">
@@ -81,12 +83,12 @@ export default function StayCard({ listing, compact }: { listing: Listing; compa
         </p>
         {!compact && (
           <p className="text-sm text-ink-soft">
-            Sleeps {listing.guests} · {listing.beds} bed{listing.beds > 1 ? "s" : ""} · {listing.baths} bath{listing.baths > 1 ? "s" : ""}
+            {count(listing.guests, "guest", "guests")} · {count(listing.beds, "bed", "beds")} · {count(listing.baths, "bath", "baths")}
           </p>
         )}
         <p className="pt-1 text-[15px]">
           <span className="font-bold text-ink">{money(listing.price)}</span>
-          <span className="text-ink-soft"> night</span>
+          <span className="text-ink-soft"> {t("night")}</span>
         </p>
       </div>
     </Link>
