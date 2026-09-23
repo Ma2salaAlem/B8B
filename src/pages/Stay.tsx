@@ -54,6 +54,19 @@ export default function Stay() {
     return days;
   }, [bookings, listing]);
 
+  const rating = listing?.rating ?? 0;
+  const bars = useMemo(() => {
+    const p5 = Math.min(92, Math.round(52 + (rating - 4.8) * 170));
+    const p4 = Math.round((100 - p5) * 0.62);
+    return [
+      { label: "5", w: p5 },
+      { label: "4", w: p4 },
+      { label: "3", w: Math.max(2, 100 - p5 - p4 - 4) },
+      { label: "2", w: 3 },
+      { label: "1", w: 1 },
+    ];
+  }, [rating]);
+
   if (!listing) {
     return (
       <div className="mx-auto max-w-xl px-6 py-28 text-center">
@@ -103,18 +116,6 @@ export default function Stay() {
   };
 
   const similar = listings.filter((l) => l.id !== listing.id && l.status === "active" && (l.town === listing.town || l.tags.some((t) => listing.tags.includes(t)))).slice(0, 3);
-
-  const bars = useMemo(() => {
-    const p5 = Math.min(92, Math.round(52 + (listing.rating - 4.8) * 170));
-    const p4 = Math.round((100 - p5) * 0.62);
-    return [
-      { label: "5", w: p5 },
-      { label: "4", w: p4 },
-      { label: "3", w: Math.max(2, 100 - p5 - p4 - 4) },
-      { label: "2", w: 3 },
-      { label: "1", w: 1 },
-    ];
-  }, [listing.rating]);
 
   const shot = (i: number, cls: string, kenburns = false) => {
     const g = listing.gallery[i];
