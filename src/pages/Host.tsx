@@ -2,6 +2,7 @@ import { useMemo, useState, type MouseEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { useStore, type NewListingInput } from "../lib/store";
+import { useLang } from "../lib/i18n";
 import { AMENITIES, PHOTO_POOL, TOWNS, townCoords } from "../lib/seed";
 import { EthiopiaChart } from "../components/MapView";
 import { Avatar, Counter, Reveal, Stars, Toggle, money } from "../components/ui";
@@ -21,11 +22,16 @@ const TYPE_TAGS: Record<string, string[]> = {
   Villa: ["Lakeshore", "Design"],
   Lakeboat: ["Lakeshore"],
   Farmhouse: ["Countryside"],
+  Tukul: ["Countryside", "Heritage"],
+  "Gojo house": ["Highlands", "Countryside"],
+  "Stone house": ["Heritage"],
+  "Desert camp": ["Desert"],
 };
 
 export default function Host() {
   const { currentUser, listings, bookings, updateListing, toast } = useStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { t } = useLang();
 
   const mine = useMemo(
     () => (currentUser ? listings.filter((l) => l.hostId === currentUser.id) : []),
@@ -51,19 +57,19 @@ export default function Host() {
   const totalViews = mine.reduce((a, l) => a + l.views, 0);
 
   const stats = [
-    { icon: IPin, label: "Listings live", value: activeCount, suffix: "" },
-    { icon: ICalendar, label: "Upcoming stays", value: upcoming.length, suffix: "" },
-    { icon: IBanknote, label: "Booking value", value: revenue, prefix: "$", suffix: "" },
-    { icon: IGauge, label: "Listing views", value: totalViews, suffix: "" },
+    { icon: IPin, label: t("Listings live"), value: activeCount, suffix: "" },
+    { icon: ICalendar, label: t("Upcoming stays"), value: upcoming.length, suffix: "" },
+    { icon: IBanknote, label: t("Booking value"), value: revenue, prefix: "ETB ", suffix: "" },
+    { icon: IGauge, label: t("Listing views"), value: totalViews, suffix: "" },
   ];
 
   return (
     <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 lg:px-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="mask-line text-xs font-bold tracking-[0.28em] text-pine-600"><span>HOST DASHBOARD</span></p>
+          <p className="mask-line text-xs font-bold tracking-[0.28em] text-pine-600"><span>{t("HOST DASHBOARD")}</span></p>
           <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-pine-950">
-            <span className="mask-line"><span style={{ "--d": "120ms" } as React.CSSProperties}>Ahoy, {currentUser.name.split(" ")[0]}.</span></span>
+            <span className="mask-line"><span style={{ "--d": "120ms" } as React.CSSProperties}>{t("Selam,")} {currentUser.name.split(" ")[0]}.</span></span>
           </h1>
           <p className="mt-2 text-[15px] text-ink-soft">
             {mine.length > 0
@@ -75,7 +81,7 @@ export default function Host() {
           onClick={() => setDrawerOpen(true)}
           className="flex items-center gap-2 rounded-full bg-pine-800 px-6 py-3 text-sm font-bold text-paper shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-pine-700 hover:shadow-float"
         >
-          <IPlus className="h-4 w-4" /> Add a listing
+          <IPlus className="h-4 w-4" /> {t("Add a listing")}
         </button>
       </div>
 
@@ -100,7 +106,7 @@ export default function Host() {
             <div className="relative z-10 max-w-xl">
               <ILogo className="h-10 w-10" />
               <h2 className="mt-5 font-display text-3xl font-semibold leading-tight">
-                Your spare cabin, boat or bizarre building is somebody's dream Tuesday.
+                Your family's tukul, lake house or old stone house is somebody's dream week in Ethiopia.
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-pine-100">
                 Haven hosts keep 88% of every booking. You set the price, the calendar and the house rules —
@@ -124,7 +130,7 @@ export default function Host() {
       {/* listings table */}
       {mine.length > 0 && (
         <section className="mt-10">
-          <h2 className="font-display text-xl font-semibold text-pine-950">Your listings</h2>
+          <h2 className="font-display text-xl font-semibold text-pine-950">{t("Your listings")}</h2>
           <div className="mt-4 overflow-hidden rounded-xl border border-line bg-paper">
             {mine.map((l, i) => (
               <div key={l.id} className={`flex flex-col gap-4 p-4 transition hover:bg-pine-50/50 sm:flex-row sm:items-center ${i > 0 ? "border-t border-line" : ""}`}>
@@ -229,27 +235,27 @@ function PriceCell({ price, onCommit }: { price: number; onCommit: (p: number) =
   const commit = () => {
     const n = parseInt(val, 10);
     setEditing(false);
-    if (!Number.isNaN(n) && n >= 20 && n <= 2000 && n !== price) onCommit(n);
+    if (!Number.isNaN(n) && n >= 1000 && n <= 200000 && n !== price) onCommit(n);
     else setVal(String(price));
   };
 
   if (!editing)
     return (
       <button onClick={() => { setVal(String(price)); setEditing(true); }} className="group flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-sm font-bold transition hover:border-pine-400" title="Edit nightly price">
-        {money(price)}<span className="text-xs font-normal text-ink-soft">/night</span>
+        {money(price)}<span className="text-xs font-normal text-ink-soft">/ night</span>
         <IPencil className="h-3.5 w-3.5 text-pine-600 opacity-0 transition group-hover:opacity-100" />
       </button>
     );
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-sm font-bold text-ink-soft">$</span>
+      <span className="text-sm font-bold text-ink-soft">ETB</span>
       <input
         autoFocus
         value={val}
         onChange={(e) => setVal(e.target.value.replace(/[^\d]/g, ""))}
         onBlur={commit}
         onKeyDown={(e) => e.key === "Enter" && commit()}
-        className="w-20 rounded-lg border border-pine-400 bg-paper px-2 py-1.5 text-sm font-bold outline-none ring-2 ring-pine-200"
+        className="w-24 rounded-lg border border-pine-400 bg-paper px-2 py-1.5 text-sm font-bold outline-none ring-2 ring-pine-200"
         aria-label="Nightly price"
       />
     </div>
@@ -260,7 +266,7 @@ function PriceCell({ price, onCommit }: { price: number; onCommit: (p: number) =
 function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { addListing } = useStore();
   const [form, setForm] = useState({
-    title: "", type: "A-frame", town: TOWNS[0].name, price: 180, cleaningFee: 60,
+    title: "", type: "A-frame", town: TOWNS[0].name, price: 15000, cleaningFee: 4000,
     guests: 2, beds: 1, baths: 1, sqft: 500, description: "", photo: "",
   });
   const [amenities, setAmenities] = useState<string[]>(["Wifi"]);
@@ -286,7 +292,7 @@ function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => voi
   const submit = () => {
     const errs: Record<string, string> = {};
     if (form.title.trim().length < 4) errs.title = "Give it a proper name (4+ characters).";
-    if (form.price < 20 || form.price > 2000) errs.price = "Nightly price must be $20–$2000.";
+    if (form.price < 1000 || form.price > 200000) errs.price = "Nightly price must be ETB 1,000–200,000.";
     if (form.description.trim().length < 40) errs.description = "Travellers want the texture — at least 40 characters.";
     if (!form.photo) errs.photo = "Pick a photo for the listing.";
     if (amenities.length === 0) errs.amenities = "Select at least one amenity.";
@@ -304,7 +310,7 @@ function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => voi
     };
     addListing(input);
     onClose();
-    setForm({ title: "", type: "A-frame", town: TOWNS[0].name, price: 180, cleaningFee: 60, guests: 2, beds: 1, baths: 1, sqft: 500, description: "", photo: "" });
+    setForm({ title: "", type: "A-frame", town: TOWNS[0].name, price: 15000, cleaningFee: 4000, guests: 2, beds: 1, baths: 1, sqft: 500, description: "", photo: "" });
     setAmenities(["Wifi"]);
     setErrors({});
   };
@@ -378,11 +384,11 @@ function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => voi
               </select>
             </div>
             <div>
-              <label className={label}>NIGHTLY PRICE ($) {errors.price && <span className="text-ember-600">— {errors.price}</span>}</label>
-              <input value={form.price} onChange={(e) => set("price", parseInt(e.target.value || "0", 10))} type="number" min={20} max={2000} className={input} />
+              <label className={label}>NIGHTLY PRICE (ETB) {errors.price && <span className="text-ember-600">— {errors.price}</span>}</label>
+              <input value={form.price} onChange={(e) => set("price", parseInt(e.target.value || "0", 10))} type="number" min={1000} max={200000} step={500} className={input} />
             </div>
             <div>
-              <label className={label}>CLEANING FEE ($)</label>
+              <label className={label}>CLEANING FEE (ETB)</label>
               <input value={form.cleaningFee} onChange={(e) => set("cleaningFee", parseInt(e.target.value || "0", 10))} type="number" min={0} className={input} />
             </div>
           </div>

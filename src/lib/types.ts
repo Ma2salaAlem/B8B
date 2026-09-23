@@ -1,3 +1,5 @@
+import type { PaymentMethod } from "./ethiopia";
+
 export interface User {
   id: string;
   name: string;
@@ -22,7 +24,7 @@ export interface Listing {
   type: string;
   town: string;
   region: string;
-  price: number; // per night
+  price: number; // per night, whole Ethiopian Birr
   cleaningFee: number;
   guests: number;
   beds: number;
@@ -54,6 +56,7 @@ export interface Booking {
   total: number;
   breakdown: { nightly: number; cleaning: number; service: number };
   status: "confirmed" | "cancelled";
+  payment?: PaymentMethod;
   createdAt: string;
 }
 

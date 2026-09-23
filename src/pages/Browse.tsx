@@ -8,11 +8,14 @@ import MapView from "../components/MapView";
 import { Reveal } from "../components/ui";
 import { ICompass, IGrid, IMap, IPin, ISparkle } from "../components/icons";
 import { useConcierge } from "../components/Concierge";
+import { useLang } from "../lib/i18n";
+import { TOWNS } from "../lib/seed";
 
 export default function Browse() {
   const { listings, bookings, favorites } = useStore();
   const s = useSearch();
   const concierge = useConcierge();
+  const { t } = useLang();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileMap, setMobileMap] = useState(false);
@@ -75,46 +78,47 @@ export default function Browse() {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
               <p className="mask-line text-xs font-bold tracking-[0.28em] text-pine-600">
-                <span style={{ "--d": "80ms" } as React.CSSProperties}>9.1° N — THE ETHIOPIAN HIGHLANDS</span>
+                <span style={{ "--d": "80ms" } as React.CSSProperties}>{t("9.1° N — THE ETHIOPIAN HIGHLANDS")}</span>
               </p>
               <h1 className="mt-3 font-display text-[40px] font-semibold leading-[1.02] tracking-tight text-pine-950 sm:text-5xl lg:text-[56px]">
-                <span className="mask-line"><span style={{ "--d": "140ms" } as React.CSSProperties}>Ten kinds of quiet,</span></span>
-                <span className="mask-line"><span style={{ "--d": "260ms" } as React.CSSProperties}>one <em className="not-italic text-pine-600">ancient</em> highland.</span></span>
+                <span className="mask-line"><span style={{ "--d": "140ms" } as React.CSSProperties}>{t("Every kind of quiet,")}</span></span>
+                <span className="mask-line"><span style={{ "--d": "260ms" } as React.CSSProperties}>{t("one")} <em className="not-italic text-pine-600">{t("ancient")}</em> {t("land.")}</span></span>
               </h1>
               <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-soft">
-                Juniper treehouses on the Semien rim, lakeboats on Tana, courtyard houses inside Harar's walls —
-                every stay on Haven is walked, slept in and sketched by our survey team before it's listed.
+                {t("hero.body")}
               </p>
             </div>
             <dl className="flex gap-8 border-l-2 border-pine-700/30 pl-6">
               <div>
-                <dt className="text-[11px] font-bold tracking-[0.18em] text-ink-soft">STAYS</dt>
+                <dt className="text-[11px] font-bold tracking-[0.18em] text-ink-soft">{t("STAYS")}</dt>
                 <dd className="font-display text-3xl font-semibold text-pine-800">{listings.filter((l) => l.status === "active").length}</dd>
               </div>
               <div>
-                <dt className="text-[11px] font-bold tracking-[0.18em] text-ink-soft">AVG RATING</dt>
+                <dt className="text-[11px] font-bold tracking-[0.18em] text-ink-soft">{t("AVG RATING")}</dt>
                 <dd className="font-display text-3xl font-semibold text-pine-800">{avgRating.toFixed(2)}</dd>
               </div>
               <div>
-                <dt className="text-[11px] font-bold tracking-[0.18em] text-ink-soft">TOWNS</dt>
-                <dd className="font-display text-3xl font-semibold text-pine-800">6</dd>
+                <dt className="text-[11px] font-bold tracking-[0.18em] text-ink-soft">{t("TOWNS")}</dt>
+                <dd className="font-display text-3xl font-semibold text-pine-800">{TOWNS.length}</dd>
               </div>
             </dl>
           </div>
         </div>
       </section>
 
+      <div className="tibeb" aria-hidden="true" />
+
       <FilterBar count={results.length} />
 
       {/* mobile map toggle */}
       <div className="mx-auto flex max-w-[1500px] items-center justify-between px-4 pt-4 sm:px-6 lg:hidden">
-        <p className="text-sm text-ink-soft"><span className="font-bold text-ink">{results.length}</span> stays</p>
+        <p className="text-sm text-ink-soft"><span className="font-bold text-ink">{results.length}</span> {t("stays")}</p>
         <div className="flex overflow-hidden rounded-full border border-line">
           <button onClick={() => setMobileMap(false)} className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold ${!mobileMap ? "bg-pine-800 text-paper" : "bg-paper"}`}>
-            <IGrid className="h-3.5 w-3.5" /> Grid
+            <IGrid className="h-3.5 w-3.5" /> {t("Grid")}
           </button>
           <button onClick={() => setMobileMap(true)} className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold ${mobileMap ? "bg-pine-800 text-paper" : "bg-paper"}`}>
-            <IMap className="h-3.5 w-3.5" /> Map
+            <IMap className="h-3.5 w-3.5" /> {t("Map")}
           </button>
         </div>
       </div>
@@ -126,19 +130,19 @@ export default function Browse() {
             {results.length === 0 ? (
               <div className="grid place-items-center rounded-xl border border-dashed border-pine-300 bg-pine-50/50 px-6 py-24 text-center">
                 <ICompass className="h-10 w-10 text-pine-400" />
-                <h2 className="mt-4 font-display text-2xl font-semibold text-pine-900">Nothing on the chart here</h2>
+                <h2 className="mt-4 font-display text-2xl font-semibold text-pine-900">{t("Nothing on the chart here")}</h2>
                 <p className="mt-2 max-w-sm text-sm text-ink-soft">
                   No stays match that combination of filters. Loosen the price range or clear your dates — the highlands are patient.
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2.5">
                   <button onClick={s.reset} className="rounded-full bg-pine-800 px-6 py-2.5 text-sm font-bold text-paper transition hover:bg-pine-700">
-                    Clear all filters
+                    {t("Clear all filters")}
                   </button>
                   <button
                     onClick={() => { s.reset(); concierge.setOpen(true); }}
                     className="flex items-center gap-1.5 rounded-full border border-pine-300 bg-paper px-5 py-2.5 text-sm font-bold text-pine-800 transition hover:bg-pine-50"
                   >
-                    <ISparkle className="h-3.5 w-3.5 text-marigold-600" /> Ask the concierge
+                    <ISparkle className="h-3.5 w-3.5 text-marigold-600" /> {t("Ask the concierge")}
                   </button>
                 </div>
               </div>

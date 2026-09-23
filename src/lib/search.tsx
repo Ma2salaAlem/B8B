@@ -24,7 +24,7 @@ export interface SearchState {
 
 const Ctx = createContext<SearchState | null>(null);
 
-const PRICE_CAP = 450;
+const PRICE_CAP = 60_000; // Birr per night
 
 export function SearchProvider({ children }: { children: ReactNode }) {
   const [query, setQuery] = useState("");

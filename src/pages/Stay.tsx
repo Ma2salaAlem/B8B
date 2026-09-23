@@ -4,6 +4,8 @@ import { addDays, differenceInDays, eachDayOfInterval, format, parseISO } from "
 import { useStore } from "../lib/store";
 import { iso, SEED_REVIEWS } from "../lib/seed";
 import type { DateRange } from "../lib/types";
+import { useLang } from "../lib/i18n";
+import { PAYMENT_METHODS, formatEthRange, type PaymentMethod } from "../lib/ethiopia";
 import DatePicker from "../components/DatePicker";
 import StayCard from "../components/StayCard";
 import { EthiopiaChart } from "../components/MapView";
@@ -20,6 +22,8 @@ export default function Stay() {
 
   const [range, setRange] = useState<DateRange>({ checkIn: null, checkOut: null });
   const [guests, setGuests] = useState(1);
+  const [payment, setPayment] = useState<PaymentMethod>("telebirr");
+  const { t, lang, count } = useLang();
   const [lightbox, setLightbox] = useState<number | null>(null);
   const viewed = useRef(false);
 
@@ -97,7 +101,7 @@ export default function Stay() {
       navigate(`/auth?next=/stay/${listing.id}`);
       return;
     }
-    const res = createBooking({ listingId: listing.id, range, guests });
+    const res = createBooking({ listingId: listing.id, range, guests, payment });
     if (res.ok) {
       toast("success", `${listing.title} is booked — ${format(parseISO(range.checkIn!), "MMM d")} to ${format(parseISO(range.checkOut!), "MMM d")}.`);
       navigate("/trips");
@@ -151,8 +155,8 @@ export default function Stay() {
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
             <span className="flex items-center gap-1.5 font-semibold">
               <IStar className="h-4 w-4 text-marigold-500" />
-              {listing.rating > 0 ? listing.rating.toFixed(2) : "New"}
-              <span className="font-normal text-ink-soft">· {listing.reviewCount || "no"} reviews</span>
+              {listing.rating > 0 ? listing.rating.toFixed(2) : t("New")}
+              <span className="font-normal text-ink-soft">· {listing.reviewCount || 0} {t("reviews")}</span>
             </span>
             <span className="flex items-center gap-1 text-ink-soft">
               <IPin className="h-4 w-4 text-pine-600" /> {listing.town}, {listing.region}
@@ -164,7 +168,7 @@ export default function Stay() {
         </div>
         <div className="flex gap-2">
           <button onClick={share} className="rounded-full border border-line px-4 py-2 text-sm font-semibold transition hover:border-pine-400 hover:bg-parch">
-            Share
+            {t("Share")}
           </button>
           <button
             onClick={() => toggleFav(listing.id)}
@@ -172,7 +176,7 @@ export default function Stay() {
               fav ? "border-ember-500/40 bg-[#fbeee9] text-ember-600" : "border-line hover:border-pine-400 hover:bg-parch"
             }`}
           >
-            <IHeart className="h-4 w-4" filled={fav} /> {fav ? "Saved" : "Save"}
+            <IHeart className="h-4 w-4" filled={fav} /> {fav ? t("Saved") : t("Save")}
           </button>
         </div>
       </div>
@@ -199,16 +203,16 @@ export default function Stay() {
               {host && <Avatar name={host.name} hue={host.hue} size="lg" />}
               <div>
                 <p className="font-display text-lg font-semibold">
-                  {listing.type} hosted by {host?.name.split(" ")[0] ?? "Haven"}
+                  {listing.type} {t("hosted by")} {host?.name.split(" ")[0] ?? "Haven"}
                 </p>
-                <p className="text-sm text-ink-soft">Hosting since {host ? format(parseISO(host.joined), "yyyy") : "—"}</p>
+                <p className="text-sm text-ink-soft">{t("Hosting since")} {host ? format(parseISO(host.joined), "yyyy") : "—"}</p>
               </div>
             </div>
             <div className="flex gap-6 text-sm">
               {[
-                { icon: IUsers, label: `${listing.guests} guests` },
-                { icon: IBed, label: `${listing.beds} beds` },
-                { icon: IBath, label: `${listing.baths} baths` },
+                { icon: IUsers, label: count(listing.guests, "guest", "guests") },
+                { icon: IBed, label: count(listing.beds, "bed", "beds") },
+                { icon: IBath, label: count(listing.baths, "bath", "baths") },
                 { icon: IRuler, label: `${listing.sqft.toLocaleString()} sq ft` },
               ].map(({ icon: Icon, label }) => (
                 <span key={label} className="flex items-center gap-2 font-semibold text-pine-800">
@@ -219,12 +223,12 @@ export default function Stay() {
           </div>
 
           <section className="border-b border-line py-6">
-            <h2 className="font-display text-xl font-semibold text-pine-950">About this stay</h2>
+            <h2 className="font-display text-xl font-semibold text-pine-950">{t("About this stay")}</h2>
             <p className="mt-3 leading-relaxed text-ink">{listing.description}</p>
           </section>
 
           <section className="border-b border-line py-6">
-            <h2 className="font-display text-xl font-semibold text-pine-950">What this place offers</h2>
+            <h2 className="font-display text-xl font-semibold text-pine-950">{t("What this place offers")}</h2>
             <ul className="mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
               {listing.amenities.map((a) => {
                 const Icon = AMENITY_ICONS[a];
@@ -241,7 +245,7 @@ export default function Stay() {
           </section>
 
           <section className="border-b border-line py-6">
-            <h2 className="font-display text-xl font-semibold text-pine-950">Where you'll be</h2>
+            <h2 className="font-display text-xl font-semibold text-pine-950">{t("Where you'll be")}</h2>
             <p className="mt-1 text-sm text-ink-soft">{listing.town} · {listing.region}</p>
             <div className="mt-4 overflow-hidden rounded-xl border border-line">
               <svg viewBox="120 30 760 660" className="h-72 w-full" role="img" aria-label={`Map showing ${listing.title} in ${listing.town}`}>
@@ -259,7 +263,7 @@ export default function Stay() {
           <section className="py-6">
             <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-pine-950">
               <IStar className="h-5 w-5 text-marigold-500" />
-              {listing.rating > 0 ? `${listing.rating.toFixed(2)} · ${listing.reviewCount} reviews` : "New listing — no reviews yet"}
+              {listing.rating > 0 ? `${listing.rating.toFixed(2)} · ${listing.reviewCount} ${t("reviews")}` : "New listing — no reviews yet"}
             </h2>
             {listing.rating > 0 && (
               <>
@@ -304,21 +308,26 @@ export default function Stay() {
             <div className="flex items-baseline justify-between">
               <p className="text-xl">
                 <span className="font-display text-2xl font-bold text-pine-950">{money(listing.price)}</span>
-                <span className="text-ink-soft"> night</span>
+                <span className="text-ink-soft"> {t("night")}</span>
               </p>
               <span className="flex items-center gap-1 text-sm font-semibold">
                 <IStar className="h-3.5 w-3.5 text-marigold-500" />
-                {listing.rating > 0 ? listing.rating.toFixed(2) : "New"}
+                {listing.rating > 0 ? listing.rating.toFixed(2) : t("New")}
               </span>
             </div>
 
             <div className="mt-5 border-t border-line pt-4">
               <DatePicker value={range} onChange={setRange} months={2} blocked={blocked} />
+              {range.checkIn && range.checkOut && (
+                <p className="mt-2 rounded-lg bg-marigold-100 px-3 py-2 text-xs font-semibold text-marigold-700">
+                  {t("Ethiopian calendar")}: {formatEthRange(range.checkIn, range.checkOut, lang)}
+                </p>
+              )}
             </div>
 
             {/* guests */}
             <div className="mt-4 flex items-center justify-between rounded-xl border border-line px-4 py-3">
-              <span className="text-sm font-semibold">Guests</span>
+              <span className="text-sm font-semibold">{t("Guests")}</span>
               <div className="flex items-center gap-3">
                 <button onClick={() => setGuests((g) => Math.max(1, g - 1))} disabled={guests <= 1} className="grid h-8 w-8 place-items-center rounded-full border border-line transition hover:border-pine-500 disabled:opacity-30" aria-label="Fewer guests">
                   <IMinus className="h-3.5 w-3.5" />
@@ -329,40 +338,69 @@ export default function Stay() {
                 </button>
               </div>
             </div>
-            <p className="mt-1.5 text-right text-xs text-ink-soft">This stay hosts up to {listing.guests}</p>
+            <p className="mt-1.5 text-right text-xs text-ink-soft">{lang === "am" ? `እስከ ${count(listing.guests, "guest", "guests")} ያስተናግዳል` : `This stay hosts up to ${listing.guests}`}</p>
 
             <button
               onClick={reserve}
               className="mt-5 w-full rounded-xl bg-pine-800 py-3.5 text-[15px] font-bold text-paper shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-pine-700 hover:shadow-float active:translate-y-0"
             >
-              {nights > 0 ? `Reserve ${nights} night${nights > 1 ? "s" : ""}` : "Check availability"}
+              {nights > 0 ? (lang === "am" ? `${count(nights, "night", "nights")} ያስይዙ` : `Reserve ${count(nights, "night", "nights")}`) : t("Check availability")}
             </button>
-            <p className="mt-2 text-center text-xs text-ink-soft">{currentUser ? "You won't be charged yet" : "Sign-in needed to confirm"}</p>
+            <p className="mt-2 text-center text-xs text-ink-soft">{currentUser ? t("You won't be charged yet") : t("Sign-in needed to confirm")}</p>
 
             {nights > 0 && (
               <dl className="fade-in mt-5 space-y-2.5 border-t border-line pt-4 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-ink-soft underline decoration-dotted underline-offset-4">{money(listing.price)} × {nights} nights</dt>
+                  <dt className="text-ink-soft underline decoration-dotted underline-offset-4">{money(listing.price)} × {count(nights, "night", "nights")}</dt>
                   <dd className="font-semibold">{money(nightly)}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-ink-soft underline decoration-dotted underline-offset-4">Cleaning fee</dt>
+                  <dt className="text-ink-soft underline decoration-dotted underline-offset-4">{t("Cleaning fee")}</dt>
                   <dd className="font-semibold">{money(listing.cleaningFee)}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-ink-soft underline decoration-dotted underline-offset-4">Haven service fee (12%)</dt>
+                  <dt className="text-ink-soft underline decoration-dotted underline-offset-4">{t("Haven service fee (12%)")}</dt>
                   <dd className="font-semibold">{money(service)}</dd>
                 </div>
                 <div className="flex justify-between border-t border-line pt-3 text-base font-bold">
-                  <dt>Total</dt>
+                  <dt>{t("Total")}</dt>
                   <dd>{money(total)}</dd>
                 </div>
               </dl>
             )}
 
+            {nights > 0 && (
+              <fieldset className="fade-in mt-4">
+                <legend className="text-xs font-bold tracking-[0.14em] text-ink-soft uppercase">{t("Pay with")}</legend>
+                <div className="mt-2 space-y-2">
+                  {PAYMENT_METHODS.map((m) => (
+                    <label
+                      key={m.id}
+                      className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 transition ${
+                        payment === m.id ? "border-pine-700 bg-pine-50" : "border-line hover:border-pine-400"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment"
+                        value={m.id}
+                        checked={payment === m.id}
+                        onChange={() => setPayment(m.id)}
+                        className="accent-[var(--color-pine-700)]"
+                      />
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold">{m.label}</span>
+                        <span className="block text-xs text-ink-soft">{lang === "am" ? m.noteAm : m.note}</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
+
             <p className="mt-5 flex items-start gap-2 rounded-lg bg-pine-50 p-3 text-xs leading-relaxed text-pine-800">
               <ICheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              Free cancellation for 48 hours. Struck-through dates on the calendar are already booked.
+              {t("cancel.note")}
             </p>
           </div>
         </aside>
@@ -371,7 +409,7 @@ export default function Stay() {
       {/* similar stays */}
       {similar.length > 0 && (
         <section className="mt-16 border-t border-line pt-10">
-          <h2 className="font-display text-2xl font-semibold text-pine-950">More havens nearby</h2>
+          <h2 className="font-display text-2xl font-semibold text-pine-950">{t("More havens nearby")}</h2>
           <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {similar.map((l, i) => (
               <Reveal key={l.id} delay={i * 90}>
