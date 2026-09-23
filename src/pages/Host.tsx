@@ -9,25 +9,28 @@ import {
   IArrowR, IBanknote, ICalendar, IEye, IGauge, ILogo, IPencil, IPin, IPlus, IStar, IX, ICheck,
 } from "../components/icons";
 
+// Keys double as the listing types offered in the form; values must be CATEGORIES from seed.ts.
 const TYPE_TAGS: Record<string, string[]> = {
-  Cabin: ["Cabins"],
-  Chalet: ["Snow country", "Cabins"],
-  Treehouse: ["Treehouses", "Cabins"],
-  "Beach house": ["Waterfront"],
-  Villa: ["Waterfront"],
-  Houseboat: ["Waterfront"],
-  Farmhouse: ["Farms & flats"],
-  Casita: ["Farms & flats"],
+  "A-frame": ["Highlands"],
+  Chalet: ["Timberline", "Highlands"],
+  Treehouse: ["Treehouses", "Highlands"],
+  "Courtyard house": ["Heritage", "Design"],
+  "Glass house": ["Design"],
   Loft: ["Design"],
+  "Shore house": ["Lakeshore"],
+  Villa: ["Lakeshore", "Design"],
+  Lakeboat: ["Lakeshore"],
+  Farmhouse: ["Countryside"],
 };
 
 export default function Host() {
   const { currentUser, listings, bookings, updateListing, toast } = useStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  if (!currentUser) return <Navigate to="/auth?next=/host" replace />;
-
-  const mine = useMemo(() => listings.filter((l) => l.hostId === currentUser.id), [listings, currentUser]);
+  const mine = useMemo(
+    () => (currentUser ? listings.filter((l) => l.hostId === currentUser.id) : []),
+    [listings, currentUser]
+  );
   const myBookings = useMemo(
     () =>
       bookings
@@ -35,6 +38,8 @@ export default function Host() {
         .sort((a, b) => (a.checkIn < b.checkIn ? 1 : -1)),
     [bookings, mine]
   );
+
+  if (!currentUser) return <Navigate to="/auth?next=/host" replace />;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -255,7 +260,7 @@ function PriceCell({ price, onCommit }: { price: number; onCommit: (p: number) =
 function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { addListing } = useStore();
   const [form, setForm] = useState({
-    title: "", type: "Cabin", town: TOWNS[0].name, price: 180, cleaningFee: 60,
+    title: "", type: "A-frame", town: TOWNS[0].name, price: 180, cleaningFee: 60,
     guests: 2, beds: 1, baths: 1, sqft: 500, description: "", photo: "",
   });
   const [amenities, setAmenities] = useState<string[]>(["Wifi"]);
@@ -299,7 +304,7 @@ function AddListingDrawer({ open, onClose }: { open: boolean; onClose: () => voi
     };
     addListing(input);
     onClose();
-    setForm({ title: "", type: "Cabin", town: TOWNS[0].name, price: 180, cleaningFee: 60, guests: 2, beds: 1, baths: 1, sqft: 500, description: "", photo: "" });
+    setForm({ title: "", type: "A-frame", town: TOWNS[0].name, price: 180, cleaningFee: 60, guests: 2, beds: 1, baths: 1, sqft: 500, description: "", photo: "" });
     setAmenities(["Wifi"]);
     setErrors({});
   };
